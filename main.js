@@ -301,9 +301,13 @@ function showLatestManga() {
 
 function showRandomManga() {
     if (!mangaData.length) return;
+
+    $("search-box").value = "";
+    updateSearchQuery("", true);
+
     currentItems = shuffleArray(mangaData);
     currentOffset = 0;
-    currentTitle = "ランダム";
+    currentTitle = "";
     showPagedManga();
 }
 
