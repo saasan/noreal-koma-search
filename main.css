@@ -28,19 +28,26 @@ body {
 }
 
 #keyword-container button,
-.clickable {
+.clickable,
+.more-button {
     color: #6633ff;
-    display: inline-block;
-    text-decoration: none;
-    border: 1px solid;
-    padding: 2px 4px;
-    border-radius: 2px;
-    transition: color 0.2s;
-    margin-bottom: 8px;
-}
-
-#keyword-container button {
     background: none;
+    text-decoration: none;
     font: inherit;
     cursor: pointer;
+    border: 1px solid;
+    border-radius: 2px;
+    transition: color 0.2s;
+}
+
+#keyword-container button,
+.clickable {
+    display: inline-block;
+    margin-bottom: 8px;
+    padding: 2px 4px;
+}
+
+.more-button {
+    margin: 2em auto;
+    padding: 0.5em 1em;
 }

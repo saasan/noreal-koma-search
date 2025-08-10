@@ -1,6 +1,12 @@
 let mangaData = [];
 const originalTitle = document.title;
 
+// --- Pagination Variables ---
+
+let currentOffset = 0;
+let currentItems = [];
+let currentTitle = "";
+
 // --- Utility Functions ---
 
 const $ = (selector) => document.querySelector(selector);
@@ -123,9 +129,9 @@ function createTextBlock(item, isSingleItem) {
     return item.text.map((t) => `<div class="manga-text">${t}</div>`).join("");
 }
 
-function renderMangaItems(items, isSingleItem = false) {
+function renderMangaItems(items, isSingleItem = false, append = false) {
     const resultsContainer = $("#results");
-    resultsContainer.innerHTML = "";
+    if (!append) resultsContainer.innerHTML = "";
 
     items.forEach((item) => {
         const div = document.createElement("div");
@@ -156,6 +162,37 @@ function renderMangaItems(items, isSingleItem = false) {
 
     if (window.twttr?.widgets) {
         window.twttr.widgets.load();
+    }
+}
+
+// --- "More" Button Management ---
+
+function addMoreButton(display = "block") {
+    let button = $("#more-button");
+    if (!button) {
+        button = document.createElement("button");
+        button.id = "more-button";
+        button.textContent = "もっと見る";
+        button.type = "button";
+        button.style.display = display;
+        button.className = "more-button"
+        button.onclick = showMoreManga;
+        $("#results").after(button);
+    }
+    button.style.display = display;
+}
+
+function hideMoreButton() {
+    const button = $("#more-button");
+    if (button) button.style.display = "none";
+}
+
+function showMoreManga() {
+    const nextItems = currentItems.slice(currentOffset, currentOffset + 10);
+    renderMangaItems(nextItems, false, true);
+    currentOffset += 10;
+    if (currentOffset >= currentItems.length) {
+        hideMoreButton();
     }
 }
 
@@ -203,8 +240,22 @@ function searchManga(query) {
     const matchedResults = mangaData.filter((item) =>
         matchMangaItem(item, parsedQuery),
     );
-    renderMangaItems(matchedResults.reverse());
-    setDocumentTitle(query);
+    currentItems = matchedResults.reverse();
+    currentOffset = 0;
+    currentTitle = query;
+    showPagedManga();
+}
+
+function showPagedManga() {
+    const firstItems = currentItems.slice(0, 10);
+    renderMangaItems(firstItems);
+    currentOffset = 10;
+    setDocumentTitle(currentTitle);
+    if (currentItems.length > currentOffset) {
+        addMoreButton();
+    } else {
+        hideMoreButton();
+    }
 }
 
 // --- View Functions ---
@@ -224,20 +275,22 @@ function showMangaById(id) {
         $("#results").innerHTML = "<p>該当する漫画が見つかりません。</p>";
         setDocumentTitle();
     }
+    hideMoreButton();
 }
 
 function showLatestManga() {
-    const latest = mangaData.slice(-10).reverse();
-    renderMangaItems(latest);
-    setDocumentTitle();
+    currentItems = mangaData.slice().reverse();
+    currentOffset = 0;
+    currentTitle = "";
+    showPagedManga();
 }
 
 function showRandomManga() {
     if (!mangaData.length) return;
-    const shuffled = shuffleArray(mangaData);
-    const randomItems = shuffled.slice(0, 10);
-    renderMangaItems(randomItems);
-    setDocumentTitle();
+    currentItems = shuffleArray(mangaData);
+    currentOffset = 0;
+    currentTitle = "ランダム";
+    showPagedManga();
 }
 
 // --- Suggested Keywords ---
@@ -345,6 +398,7 @@ function initializeSuggestedKeywords() {
 function main() {
     loadMangaData();
     addRandomButton();
+    addMoreButton("none");
 }
 
 // --- Popstate (Back/Forward Navigation) ---
