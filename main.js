@@ -42,6 +42,7 @@ const formatDate = (isoString) =>
 async function loadMangaData() {
     const response = await fetch("merged.json");
     mangaData = await response.json();
+    initializeSuggestedKeywords();
     handleInitialView();
 }
 
@@ -264,22 +265,81 @@ function addRandomButton() {
     keywordContainer.appendChild(document.createTextNode("\n"));
 }
 
+function extractSuggestedKeywords() {
+    const seriesCounts = new Map();
+    const characterCounts = new Map();
+    const seriesCharacters = new Map();
+
+    for (const item of mangaData) {
+        if (Array.isArray(item.series)) {
+            for (const series of item.series) {
+                if (series && typeof series === 'string') {
+                    seriesCounts.set(series, (seriesCounts.get(series) || 0) + 1);
+
+                    if (!seriesCharacters.has(series)) {
+                        seriesCharacters.set(series, new Set());
+                    }
+                }
+            }
+        }
+
+        if (Array.isArray(item.characters)) {
+            for (const character of item.characters) {
+                if (character && typeof character === 'string') {
+                    characterCounts.set(character, (characterCounts.get(character) || 0) + 1);
+
+                    if (Array.isArray(item.series)) {
+                        for (const series of item.series) {
+                            if (series && typeof series === 'string' && seriesCharacters.has(series)) {
+                                seriesCharacters.get(series).add(character);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    const result = [];
+    const usedCharacters = new Set();
+
+    // 3回以上登場するシリーズを出現回数でソート
+    const validSeries = Array.from(seriesCounts.entries())
+        .filter(([, count]) => count >= 3)
+        .sort((a, b) => b[1] - a[1])
+        .map(([series]) => series);
+
+    // シリーズとそのキャラクターを順番に配列に格納
+    for (const series of validSeries) {
+        result.push(series);
+
+        // このシリーズのキャラクターで3回以上登場するものを取得・ソート
+        const seriesChars = seriesCharacters.get(series);
+        if (seriesChars && seriesChars.size > 0) {
+            const validCharacters = Array.from(seriesChars)
+                .filter(character => characterCounts.get(character) >= 3)
+                .sort((a, b) => characterCounts.get(b) - characterCounts.get(a));
+
+            for (const character of validCharacters) {
+                result.push(character);
+                usedCharacters.add(character);
+            }
+        }
+    }
+
+    // シリーズに属していないが3回以上登場するキャラクターを追加
+    const standaloneCharacters = Array.from(characterCounts.entries())
+        .filter(([character, count]) => count >= 3 && !usedCharacters.has(character))
+        .sort((a, b) => b[1] - a[1])
+        .map(([character]) => character);
+
+    result.push(...standaloneCharacters);
+
+    return result;
+}
+
 function initializeSuggestedKeywords() {
-    const keywords = [
-        "黒々さん",
-        "黒々漆子",
-        "吹鴫ナユ太",
-        "星見鳥心",
-        "漫画で例える男",
-        "キュートアグレッシャー井上",
-        "コンイチ",
-        "狐鳴紺子郎",
-        "狐鳴紺一",
-        "場美桜子",
-        "シンケンドゥー",
-        "尾張くんと端鞠さん",
-        "ハムパチーノ",
-    ];
+    const keywords = extractSuggestedKeywords();
 
     const keywordContainer = $("#keyword-container");
     keywords.forEach((keyword) => {
@@ -298,7 +358,6 @@ function initializeSuggestedKeywords() {
 function main() {
     loadMangaData();
     addRandomButton();
-    initializeSuggestedKeywords();
 }
 
 // --- Popstate (Back/Forward Navigation) ---
