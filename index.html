@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>存在しない漫画の1コマbot検索</title>
+        <link rel="stylesheet" href="main.css" />
+        <script async src="main.js" charset="utf-8"></script>
+        <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    </head>
+
+    <body>
+        <h1>存在しない漫画の1コマbot検索</h1>
+        <div>
+            <a href="https://x.com/noreal_koma" target="_blank">存在しない漫画の1コマbot</a>
+            の漫画をセリフ、キャラクター名などで検索できます。
+        </div>
+        <div>
+            誤字、脱字などを見つけた場合は
+            <a href="https://github.com/saasan/noreal-koma-json/issues" target="_blank"
+                >GitHub の Issue</a
+            >
+            でご連絡ください。
+        </div>
+        <input
+            type="text"
+            id="search-box"
+            placeholder="セリフ、キャラクター名などを入力..."
+            oninput="updateSearchQuery()"
+        />
+
+        <div id="keyword-container"></div>
+
+        <div class="result-container" id="results"></div>
+    </body>
+</html>
