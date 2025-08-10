@@ -421,7 +421,7 @@ function main() {
     $("clear-button").addEventListener("click", () => {
         const searchBox = $("search-box");
         searchBox.value = "";
-        updateSearchQuery();
+        updateSearchQuery("", true);
         searchBox.focus();
     });
 }
