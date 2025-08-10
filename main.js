@@ -43,6 +43,18 @@ const formatDate = (isoString) =>
         hour12: false,
     });
 
+function syncClearButtonVisibility() {
+    const searchBox = $("#search-box");
+    const clearButton = $("#clear-button");
+    if (!searchBox || !clearButton) return;
+
+    if (searchBox.value) {
+        clearButton.style.display = "block";
+    } else {
+        clearButton.style.display = "none";
+    }
+}
+
 // --- Data Loading ---
 
 async function loadMangaData() {
@@ -64,6 +76,7 @@ function handleInitialView() {
     } else {
         showLatestManga();
     }
+    syncClearButtonVisibility();
 }
 
 // --- URL & History Handling ---
@@ -71,6 +84,8 @@ function handleInitialView() {
 function updateSearchQuery(queryOverride = null, usePush = false) {
     const query = queryOverride ?? $("#search-box").value.trim();
     const newUrl = new URL(window.location);
+
+    syncClearButtonVisibility();
 
     // id指定は検索時に無効
     newUrl.searchParams.delete("id");
@@ -399,6 +414,13 @@ function main() {
     loadMangaData();
     addRandomButton();
     addMoreButton("none");
+
+    $("#clear-button").addEventListener("click", () => {
+        const searchBox = $("#search-box");
+        searchBox.value = "";
+        updateSearchQuery();
+        searchBox.focus();
+    });
 }
 
 // --- Popstate (Back/Forward Navigation) ---
