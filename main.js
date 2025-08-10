@@ -154,22 +154,9 @@ function renderMangaItems(items, isSingleItem = false) {
         resultsContainer.appendChild(div);
     });
 
-    attachKeywordClickHandlers();
-
     if (window.twttr?.widgets) {
         window.twttr.widgets.load();
     }
-}
-
-function attachKeywordClickHandlers() {
-    $$(".clickable").forEach((link) => {
-        link.addEventListener("click", (e) => {
-            e.preventDefault();
-            const keyword = e.target.dataset.key;
-            $("#search-box").value = keyword;
-            updateSearchQuery(keyword, true);
-        });
-    });
 }
 
 // --- Search Logic ---
