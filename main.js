@@ -9,8 +9,7 @@ let currentTitle = "";
 
 // --- Utility Functions ---
 
-const $ = (selector) => document.querySelector(selector);
-const $$ = (selector) => document.querySelectorAll(selector);
+const $ = (id) => document.getElementById(id);
 
 function shuffleArray(array) {
     const arr = array.slice();
@@ -44,8 +43,8 @@ const formatDate = (isoString) =>
     });
 
 function syncClearButtonVisibility() {
-    const searchBox = $("#search-box");
-    const clearButton = $("#clear-button");
+    const searchBox = $("search-box");
+    const clearButton = $("clear-button");
     if (!searchBox || !clearButton) return;
 
     if (searchBox.value) {
@@ -71,7 +70,7 @@ function handleInitialView() {
     if (idParam) {
         showMangaById(idParam);
     } else if (searchQuery) {
-        $("#search-box").value = searchQuery;
+        $("search-box").value = searchQuery;
         searchManga(searchQuery);
     } else {
         showLatestManga();
@@ -82,7 +81,7 @@ function handleInitialView() {
 // --- URL & History Handling ---
 
 function updateSearchQuery(queryOverride = null, usePush = false) {
-    const query = queryOverride ?? $("#search-box").value.trim();
+    const query = queryOverride ?? $("search-box").value.trim();
     const newUrl = new URL(window.location);
 
     syncClearButtonVisibility();
@@ -145,7 +144,7 @@ function createTextBlock(item, isSingleItem) {
 }
 
 function renderMangaItems(items, isSingleItem = false, append = false) {
-    const resultsContainer = $("#results");
+    const resultsContainer = $("result-container");
     if (!append) resultsContainer.innerHTML = "";
 
     items.forEach((item) => {
@@ -183,7 +182,7 @@ function renderMangaItems(items, isSingleItem = false, append = false) {
 // --- "More" Button Management ---
 
 function addMoreButton(display = "block") {
-    let button = $("#more-button");
+    let button = $("more-button");
     if (!button) {
         button = document.createElement("button");
         button.id = "more-button";
@@ -192,13 +191,13 @@ function addMoreButton(display = "block") {
         button.style.display = display;
         button.className = "more-button"
         button.onclick = showMoreManga;
-        $("#results").after(button);
+        $("result-container").after(button);
     }
     button.style.display = display;
 }
 
 function hideMoreButton() {
-    const button = $("#more-button");
+    const button = $("more-button");
     if (button) button.style.display = "none";
 }
 
@@ -287,7 +286,7 @@ function showMangaById(id) {
             setDocumentTitle();
         }
     } else {
-        $("#results").innerHTML = "<p>該当する漫画が見つかりません。</p>";
+        $("result-container").innerHTML = "<p>該当する漫画が見つかりません。</p>";
         setDocumentTitle();
     }
     hideMoreButton();
@@ -311,7 +310,7 @@ function showRandomManga() {
 // --- Suggested Keywords ---
 
 function addRandomButton() {
-    const keywordContainer = $("#keyword-container");
+    const keywordContainer = $("keyword-container");
     const button = document.createElement("button");
     button.textContent = "ランダム";
     button.type = "button";
@@ -396,7 +395,7 @@ function extractSuggestedKeywords() {
 function initializeSuggestedKeywords() {
     const keywords = extractSuggestedKeywords();
 
-    const keywordContainer = $("#keyword-container");
+    const keywordContainer = $("keyword-container");
     keywords.forEach((keyword) => {
         const link = document.createElement("a");
         link.className = "clickable";
@@ -415,8 +414,8 @@ function main() {
     addRandomButton();
     addMoreButton("none");
 
-    $("#clear-button").addEventListener("click", () => {
-        const searchBox = $("#search-box");
+    $("clear-button").addEventListener("click", () => {
+        const searchBox = $("search-box");
         searchBox.value = "";
         updateSearchQuery();
         searchBox.focus();
