@@ -143,6 +143,7 @@ function renderMangaItems(items, isSingleItem = false) {
             createInfoBlock("タグ", item.tag),
             createInfoBlock("シリーズ", item.series),
             createInfoBlock("キャラ", item.characters),
+            createLinkBlock("Instagram", item.instagram),
             createLinkBlock("SUZURI", item.suzuri),
             createLinkBlock("LINEスタンプ", item.lineSticker),
             createLinkBlock("QRコード", item.QRCode),
