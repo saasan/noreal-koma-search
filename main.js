@@ -210,7 +210,7 @@ function addMoreButton(display = "block") {
         button.textContent = "もっと見る";
         button.type = "button";
         button.style.display = display;
-        button.className = "more-button"
+        button.className = "more-button";
         button.onclick = showMoreManga;
         $("result-container").after(button);
     }
