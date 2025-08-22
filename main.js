@@ -196,6 +196,14 @@ function renderMangaItems(items, isSingleItem = false, append = false) {
                 <a href="${item.embed}" target="_blank">SUZURI で見る</a>
                 </iframe>`;
         }
+        else if (item.embed.includes("youtube.com")) {
+            blockquote = `<iframe class="youtube" src="${item.embed}"
+                title="YouTube video player" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
+                <a href="${item.id}" target="_blank">YouTube で見る</a>
+                </iframe>`;
+        }
 
         div.innerHTML = [
             blockquote,
