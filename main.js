@@ -180,15 +180,15 @@ function renderMangaItems(items, isSingleItem = false, append = false) {
         div.className = "result-item";
 
         let blockquote = "";
-        if (item.id.includes("twitter.com")) {
+        if (item.embed.includes("twitter.com")) {
             blockquote = `<blockquote class="twitter-tweet" data-media-max-width="560">
-                <a href="${item.id}" target="_blank">X で見る</a>
+                <a href="${item.embed}" target="_blank">X で見る</a>
                 </blockquote>`;
         }
-        else if (item.id.includes("instagram.com")) {
+        else if (item.embed.includes("instagram.com")) {
             blockquote = `<blockquote class="instagram-media"
-                data-instgrm-permalink="${item.id}" data-instgrm-version="14">
-                <a href="${item.id}" target="_blank">Instagram で見る</a>
+                data-instgrm-permalink="${item.embed}" data-instgrm-version="14">
+                <a href="${item.embed}" target="_blank">Instagram で見る</a>
                 </blockquote>`;
         }
 
