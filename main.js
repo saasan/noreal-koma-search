@@ -191,6 +191,11 @@ function renderMangaItems(items, isSingleItem = false, append = false) {
                 <a href="${item.embed}" target="_blank">Instagram で見る</a>
                 </blockquote>`;
         }
+        else if (item.embed.includes("suzuri.jp")) {
+            blockquote = `<iframe height="162" width="375" src="${item.embed}">
+                <a href="${item.embed}" target="_blank">SUZURI で見る</a>
+                </iframe>`;
+        }
 
         div.innerHTML = [
             blockquote,
