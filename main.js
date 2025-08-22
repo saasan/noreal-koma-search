@@ -192,8 +192,8 @@ function renderMangaItems(items, isSingleItem = false, append = false) {
                 </blockquote>`;
         }
         else if (item.embed.includes("suzuri.jp")) {
-            blockquote = `<iframe height="162" width="375" src="${item.embed}">
-                <a href="${item.embed}" target="_blank">SUZURI で見る</a>
+            blockquote = `<iframe height="162" width="360" src="${item.embed}" frameborder="0">
+                <a href="${item.id}" target="_blank">SUZURI で見る</a>
                 </iframe>`;
         }
         else if (item.embed.includes("youtube.com")) {
